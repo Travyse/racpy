@@ -4,7 +4,7 @@ import os
 import pandas as pd
 import statsmodels.api as sm
 import mygene
-from missingpy import KNNImputer
+from sklearn.impute import KNNImputer
 from . import exceptions as e
 
 
@@ -423,8 +423,7 @@ class RNAAgeCalc(object):
         # check partial NA
         if ~exprdata_log.notnull().all().all():
             # impute the gene expression in the log scale
-            imputer = KNNImputer(n_neighbors=min(10, exprdata_log.shape[1]),
-                                 row_max_missing=1, col_max_missing=1)
+            imputer = KNNImputer(n_neighbors=min(10, exprdata_log.shape[1]))
             X_imputed = imputer.fit_transform(exprdata_log.transpose())
             exprdata_log_impute = pd.DataFrame(X_imputed).transpose()
             exprdata_log_impute.index = exprdata_log.index
